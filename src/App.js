@@ -6,6 +6,7 @@ import {
   sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import app from "./firebase.init";
 import { Button, Form } from "react-bootstrap";
@@ -17,6 +18,12 @@ function App() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [registered, setRegistered] = useState(false);
+  const [name, setName] = useState("");
+
+  const getName = (event) => {
+    setName(event.target.value);
+    console.log(name);
+  };
 
   const getEmail = (event) => {
     setEmail(event.target.value);
@@ -62,6 +69,7 @@ function App() {
           setEmail(" ");
           setPassword(" ");
           verifyEmail();
+          sendName();
         })
         .catch((error) => {
           console.error(error);
@@ -70,7 +78,13 @@ function App() {
     }
     event.preventDefault();
   };
-
+  const sendName = () => {
+    updateProfile(auth.currentUser, { displayName: name })
+      .then(() => {
+        console.log("Name Updated");
+      })
+      .catch((error) => console.error(error.message));
+  };
   const verifyEmail = () => {
     sendEmailVerification(auth.currentUser).then(() =>
       console.log("Emaail Sent")
@@ -88,6 +102,20 @@ function App() {
           Please {registered ? "LogIn" : "Register"}
         </h2>
         <Form noValidate validated={validated} onSubmit={getForm}>
+          {!registered && (
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Label>Your Name</Form.Label>
+              <Form.Control
+                onBlur={getName}
+                type="text"
+                placeholder="Type Your Name"
+                required
+              />
+              <Form.Control.Feedback type="error">
+                Please type Your Name.
+              </Form.Control.Feedback>
+            </Form.Group>
+          )}
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Email address</Form.Label>
             <Form.Control
