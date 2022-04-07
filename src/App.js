@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import {
   createUserWithEmailAndPassword,
   getAuth,
+  sendEmailVerification,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import app from "./firebase.init";
@@ -59,6 +60,7 @@ function App() {
           console.log(user);
           setEmail(" ");
           setPassword(" ");
+          verifyEmail();
         })
         .catch((error) => {
           console.error(error);
@@ -66,6 +68,12 @@ function App() {
         });
     }
     event.preventDefault();
+  };
+
+  const verifyEmail = () => {
+    sendEmailVerification(auth.currentUser).then(() =>
+      console.log("Emaail Sent")
+    );
   };
   return (
     <div className="App">
