@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   sendEmailVerification,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import app from "./firebase.init";
@@ -75,6 +76,11 @@ function App() {
       console.log("Emaail Sent")
     );
   };
+  const resetPassword = () => {
+    sendPasswordResetEmail(auth, email).then(() =>
+      console.log("reset Password Mail Sent")
+    );
+  };
   return (
     <div className="App">
       <div className="w-50 mx-auto">
@@ -118,6 +124,11 @@ function App() {
               label="Already Registered?"
             />
           </Form.Group>
+          {registered && (
+            <Button onClick={resetPassword} variant="link">
+              Forget Password?
+            </Button>
+          )}
           <Button variant="primary" type="submit">
             {registered ? "Log In" : "Register"}
           </Button>
